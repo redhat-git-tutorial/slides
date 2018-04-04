@@ -1,5 +1,7 @@
 # Git.
 
+(https://redhat-git-tutorial.github.io/slides/)
+
 ---
 
 # Introductions
