@@ -457,6 +457,8 @@ project.
 
 - Select "skip this step" on the final screen.
 
+(You will get an email asking you to verify your email address.)
+
 ---
 
 # Interlude: Authentication
