@@ -360,6 +360,81 @@ Date:   Tue Apr 3 23:04:14 2018 -0400
 
 ---
 
+# Branches: Exploring different solutions
+
+You want to explore a solution to a problem while still preserving the
+current state of your project. You can do this by creating a new
+"branch".
+
+- Your project already has one branch named `master`.
+
+- You can create a new branch like this:
+
+  ```
+  git checkout -b my-new-branch
+  ```
+
+Any changes you commit at this point will modify your `my-new-branch`
+branch, leaving your `master` branch untouched.
+
+---
+
+# Branches: Changing branches
+
+You can switch branches with the `git checkout` command.  To switch
+back to the `master` branch:
+
+```
+git checkout master
+```
+
+And back to `my-new-branch`:
+
+```
+git checkout my-new-branch
+```
+
+The `git status` command will tell you where you are if you forget:
+
+```
+On branch my-new-branch
+nothing to commit, working tree clean
+```
+
+---
+
+# Branches: what changed?
+
+You can use the `git diff` command to see the differences between two
+branches.
+
+```
+git checkout my-new-branch
+git diff master
+```
+
+---
+
+# Branches: merging changes
+
+After working on a solution for a while, you think you've solved the
+problem and you would like to commit those changes on your `master`
+branch.
+
+- Check out the `master` branch:
+
+  ```
+  git checkout master
+  ```
+
+- Merge the changes:
+
+  ```
+  git merge my-new-branch
+  ```
+
+---
+
 # Collaborating with others: Sharing code on GitHub
 
 [GitHub][] is a hosting provider for git repositories.  We're going to
@@ -419,9 +494,9 @@ git config --global credential.helper 'cache'
 
 ---
 
-# GitHub: Push our local repository
+# GitHub: Push your local repository
 
-- Configure our GitHub repository as a **remote** in our local
+- Configure your GitHub repository as a **remote** in your local
   repository:
 
   ```
@@ -431,13 +506,13 @@ git config --global credential.helper 'cache'
   This creates a **remote** named "origin", which is the canonical name
   for the primary remote of a git repository.
 
-- Push our project to the remote:
+- Push your project to the remote:
 
   ```
   git push -u origin master
   ```
 
-  This tells git to push our local `master` branch to the remote named
+  This tells git to push your local `master` branch to the remote named
   `origin`, and to make this the default destination so that in the
   future we can just type:
 
