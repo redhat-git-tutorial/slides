@@ -8,6 +8,7 @@
 
 - Who am I?
 
+  - <lars@redhat.com>
   - https://github.com/larsks
   - http://blog.oddbit.com/
 
