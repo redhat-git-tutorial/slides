@@ -1,6 +1,23 @@
+# Forking and Pull Requests
+
+---
+
+# A better workflow for collaboration
+
+In the previous slides, we all shared a single remote repository. That
+works okay for small groups, but isn't an option for a project with
+many contributors.
+
+The "pull request" model allows anyone to contribute to a project in a
+controlled fashion (and even in small groups, it enables things like
+automated testing before commits are merged).
+
+---
+
 # GitHub: Forking a project
 
-We're all going to collaborate on a project.
+"Forking" a repository makes a copy of someone else's repository in
+your GitHub account.
 
 - Go to <https://github.com/redhat-git-tutorial/redhat-git-example-2>.
 
@@ -79,9 +96,16 @@ the original ("upstream") repository.
 
 - On the following screen, select the "Create pull request" button.
 
-This will create a pull request in the upstream repository. The
-maintainer can approve (or not!) the request to merge the changes into
-the upstream repository.
+This will create a pull request in the upstream repository.
+
+---
+
+# GitHub: Approving changes
+
+A maintainer can approve (or not!) the request to merge the changes
+into the upstream repository.
+
+![Approving a pull request](images/approve-pull-request-small.png)
 
 ---
 
@@ -107,11 +131,3 @@ requests. You would like your fork to reflect these changes.
   ```
   git merge upstream/master
   ```
-
-- Push your updated local repository back to your GitHub account:
-
-  ```
-  git push
-  ```
-
-
