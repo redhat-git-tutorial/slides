@@ -22,9 +22,12 @@
 - A version control system is a way of tracking changes to one or more
   files.
 
-- This is an example of a *bad* version control system:
+- Have you ever done this?
 
         cp myfile.py myfile.py.20180327
+
+  That's a form of version control (but not very effective in the long
+  term).
 
 ---
 
@@ -131,11 +134,20 @@ they're important topics that I hope we'll have time to discuss.
 # Installing git
 
 - If you have MacOS: Just run `git`, and then follow the prompts to
-  install the developer tools when prompted.
+  install the developer tools.
 
-- If you have Red Hat/Fedora/CentOS: Run `yum install git`
+- If you have Red Hat/Fedora/CentOS:
 
-- If you have Ubuntu: Run `apt-get update; apt-get install git`
+  ```
+  sudo yum install git
+  ```
+
+- If you have Ubuntu:
+
+  ```
+  sudo apt-get update
+  sudo apt-get install git
+  ```
 
 ---
 
@@ -153,7 +165,7 @@ If you have Windows:
 Git needs to know who you are in order to identify you in your commit
 messages.  Run the following commands to configure this information:
 
-```sh
+```
 git config --global user.name "Your Name Here"
 git config --global user.email you@your.email.address
 ```
@@ -165,7 +177,7 @@ git config --global user.email you@your.email.address
 You're about to start a new project and you want to use version
 control from the very beginning because you're just that awesome:
 
-```sh
+```
 git init MyProject
 ```
 
@@ -173,7 +185,7 @@ You have an existing project and you realize how much easier and more
 productive your life would be if you were to track your changes with
 git:
 
-```sh
+```
 cd MyProject
 git init
 git add .
@@ -182,12 +194,96 @@ git commit -m 'Initial import'
 
 ---
 
-# Getting started: cloning a remote repository
+# Making changes: adding files
 
-You want to start hacking on somebody else's code:
+After working on your project for a bit, you now have a couple of
+files of source code.
 
-```sh
-git clone https://github.com/redhat-git-tutorial/example.git
+In `README.md` you have:
+
+```markdown
+# My first git project
+
+This is an example for the git tutorial at Red Hat.
+```
+
+And in `example.py` you have:
+
+```python
+print('Hello world!')
+```
+
+---
+
+name: adding
+
+# Making changes: adding files
+
+You want `git` to manage changes to these files.
+
+- Tell `git` that you want to commit these files to your repository:
+
+  ```
+  git add example.py README.md
+  ```
+
+- Commit the files with an appropriate commit message:
+
+  ```
+  git commit
+  ```
+
+  This will open an editor into which you can enter a commit message.
+  Alternately, you can provide one on the command line:
+
+  ```
+  git commit -m 'This will be an awesome project.'
+  ```
+
+---
+
+# Interlude: commit messages
+
+A commit message should succinctly describe the changes included in
+that particular commit.  There is a canonical format for commit
+messages that is useful to follow:
+
+```
+A one line summary of the commit.
+
+One or more paragraphs describing the commit.  What did you
+change? Why did you change it?
+```
+
+---
+
+# Interlude: commit messages
+
+This is not a good commit message:
+
+    Fixed a bug.
+
+This is a better commit message.
+
+    Fixed bug that was causing connections to abort with an error.
+
+    In myproject/connection.py, we didn't account for situations in
+    which we received an empty first line, resulting in an IndexError
+    exception. This commit checks for that situation and exits
+    gracefully.
+
+---
+
+# Making changes: edit your files
+
+Modify `example.py` so that it looks like this:
+
+```python
+def main():
+    print('Hello world!')
+
+if __name__ == '__main__':
+    main
 ```
 
 ---
@@ -199,7 +295,7 @@ of what you changed.
 
 To see a list of modified files, use `git status`:
 
-```sh
+```
 $ git status
 On branch master
 
@@ -208,11 +304,6 @@ Changes not staged for commit:
   (use "git checkout -- <file>..." to discard changes in working directory)
 
 	modified:   example.py
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	awesome_file.py
 ```
 
 ---
@@ -221,46 +312,26 @@ Untracked files:
 
 To see the actual modifications, use `git diff`:
 
-```sh
-$ git diff
+```
 diff --git a/example.py b/example.py
-index f619699..ce9b6cd 100644
+index 60f08aa..492b359 100644
 --- a/example.py
 +++ b/example.py
-@@ -1,5 +1,5 @@
- def main():
--    print('This is a very contrived example.')
-+    print('Hello Boston!')
- 
- if __name__ == '__main__':
-     main()
+@@ -1 +1,5 @@
+-print('Hello world!')
++def main():
++    print('Hello world!')
++
++if __name__ == '__main__':
++    main
 ```
 
 ---
 
 # Making changes: saving your changes
 
-You've made some changes to your project. You would like to commit
-these changes to your git repository.
-
-1. Tell git what files you want to commit.
-
-   ```sh
-   git add example.py awesome_file.py
-   ```
-
-1. Commit the changes to the repository.
-
-   ```sh
-   git commit
-   ```
-
-   This will open an editor in which you can type a commit message.
-   Alternately, you can provide one on the command line:
-
-   ```sh
-   git commit -m 'Fixing some spelling errors'
-   ```
+After making changes, don't forget to [add and commit](#adding) those
+changes.
 
 ---
 
@@ -269,7 +340,7 @@ these changes to your git repository.
 You would like to view the history of a git repository.  Use `git
 log`:
 
-```sh
+```
 $ git log
 commit add09696954b831fbcad4d9f713142699e3da6ec (HEAD -> master, origin/master, origin/HEAD)
 Author: Lars Kellogg-Stedman <lars@redhat.com>
@@ -289,97 +360,151 @@ Date:   Tue Apr 3 23:04:14 2018 -0400
 
 ---
 
-# Merge conflicts
+# Collaborating with others: Sharing code on GitHub
 
-Let's say we start with a file `example.py` in a remote repository
-that looks like this:
+[GitHub][] is a hosting provider for git repositories.  We're going to
+walk through an example in which we use GitHub to collaborate on a
+project.
 
-```python
-def main():
-    print('Hello World.')
-
-if __name__ == '__main__':
-    main()
-```
-
-Bob and Alice have both cloned this locally and are making changes.
+[github]: https://github.com
 
 ---
 
-# Merge conflicts
+# GitHub: Create an account
 
-Alice changes the file so that it looks like this:
+- Go to <https://github.com>
 
-```python
-def main():
-    print('This is a very contrived example.')
+- Pick a username and password and provide your email address.
 
-if __name__ == '__main__':
-    main()
+- Select the "Sign up for GitHub" button.
+
+- Select "Continue" on the next screen.
+
+- Select "skip this step" on the final screen.
+
+---
+
+# Interlude: Authentication
+
+When you interact with a remote repository, that remote system needs
+to verify that you are really you. There are different ways of doing
+that; today we'll be using passwords.  It's annoying if you have to
+type in your password every time you run a remote command.  This will
+help:
+
 ```
-
-She commits her changes:
-
-```sh
-$ git add example.py
-$ git commit -m 'This is an awful commit message'
-[master add99f4] This is an awful commit message
- 1 file changed, 1 insertion(+), 1 deletion(-)
+git config --global credential.https://github.com.username yourusername
+git config --global credential.helper 'cache'
 ```
 
 ---
 
-# Merge conflicts
+# GitHub: Create a repository
 
-Alice pushes her changes back to the remote repository:
+- Navigate to https://github.com/
 
-```sh
+- Click on the "+" in the upper right and select "New repository".
+
+  ![New repository menu](images/new-repository.png)
+
+---
+
+# GitHub: Create a repository
+
+- Give your project a name (and optionally a description).
+
+  ![Create repository screen](images/create-repository-small.png)
+
+- Select the "Create repository" button.
+
+---
+
+# GitHub: Push our local repository
+
+- Configure our GitHub repository as a **remote** in our local
+  repository:
+
+  ```
+  git remote add origin https://github.com/larsks/redhat-git-example.git
+  ```
+
+  This creates a **remote** named "origin", which is the canonical name
+  for the primary remote of a git repository.
+
+- Push our project to the remote:
+
+  ```
+  git push -u origin master
+  ```
+
+  This tells git to push our local `master` branch to the remote named
+  `origin`, and to make this the default destination so that in the
+  future we can just type:
+
+  ```
+  git push
+  ```
+
+---
+
+# GitHub: Cloning a remote repository
+
+We're all going to collaborate on a single project.
+
+- Clone the remote repository:
+
+  ```
+  git clone https://github.com/redhat-git-tutorial/redhat-git-example-2
+  ```
+
+  This will create a folder named `redhat-git-example-2` on your local
+  computer.
+
+---
+
+# GitHub: Make some changes
+
+Each person will do one of these things:
+
+- Add a list of participants to the `README.md` file.
+- Add a comment to the first line of the `example.py` file.
+- Change the string in the existing `print` statement.
+- Add a second `print` statement right under the first one.
+
+---
+
+# GitHub: Push your changes
+
+- Add the files that have been modified:
+
+  ```
+  git add example.py
+  ```
+
+- Commit the changes:
+
+  ```
+  git commit
+  ```
+
+- Try to push the changes:
+
+  ```
+  git push
+  ```
+
+---
+
+# GitHub: Push your changes
+
+If you were the first person to run `git push`, it worked without a
+problem.  Everyone else saw something that looked like this:
+
+```
 $ git push
-Counting objects: 3, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (2/2), done.
-Writing objects: 100% (3/3), 347 bytes | 347.00 KiB/s, done.
-Total 3 (delta 0), reused 0 (delta 0)
-To upstream
-   14b2c5e..ca2ea18  master -> master
-```
-
----
-
-# Merge conflicts
-
-Meanwhile, Bob has changed his file so that it looks like this:
-
-```python
-def main():
-    print('Hello Boston!')
-
-if __name__ == '__main__':
-    main()
-```
-
-He commits his changes...
-
-```sh
-$ git add example.py
-$ git commit -m 'Boston is pretty awesome.'
-[master 7ce8691] Boston is pretty awesome.
- 1 file changed, 1 insertion(+), 1 deletion(-)
-```
-
-...and then tries to push them to the remote repository.
-
----
-
-# Merge conflicts
-
-Unfortunately, Alice got there first.
-
-```sh
-$ git push
-To upstream
+To https://github.com/redhat-git-tutorial/redhat-git-example-2
  ! [rejected]        master -> master (fetch first)
-error: failed to push some refs to 'upstream'
+error: failed to push some refs to 'https://github.com/redhat-git-tutorial/redhat-git-example-2'
 hint: Updates were rejected because the remote contains work that you do
 hint: not have locally. This is usually caused by another repository pushing
 hint: to the same ref. You may want to first integrate the remote changes
@@ -387,145 +512,45 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-Bob is not surprised! This just means that the remote repository has
-more recent changes that it did when Bob last pulled it.  Bob knows
-that all he has to do is merge those changes into his local
-repository.
+This just means that the remote repository has changed since we cloned
+it.  We need to update our local repository with those changes.
 
 ---
 
-# Merge conflicts
+# GitHub: Synchronizing your changes
 
-Bob attempts to merge the remote changes:
+You can synchronize your local repository with a remote repository by
+running:
 
-```sh
-$ git pull
+```
+git pull
+```
+
+Which will result in output like:
+
+```
 remote: Counting objects: 3, done.
 remote: Compressing objects: 100% (2/2), done.
-remote: Total 3 (delta 0), reused 0 (delta 0)
+remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
 Unpacking objects: 100% (3/3), done.
-From upstream
-   eef204c...ca2ea18 master     -> origin/master
-CONFLICT (content): Merge conflict in example.py
-Automatic merge failed; fix conflicts and then commit the result.
+From https://github.com/larsks/redhat-git-example-2
+   95dee73..baa29b5  master     -> origin/master
+First, rewinding head to replay your work on top of it...
+Applying: modified comment
 ```
 
-Oh no, a conflict! This means that Bob and Alice have made changes to
-overlapping lines in the same file.
+Git has combined your local changes with the changes that were in the
+remote repository.
 
 ---
 
-# Merge conflicts
+# GitHub: Synchronizing your changes
 
-At this point, `git` has annotated the file to show the conflict:
-
-```python
-def main():
-<<<<<<< HEAD
-    print('Hello Boston!')
-=======
-    print('This is a very contrived example.')
->>>>>>> ca2ea182084c582d4c870f31b4e894e894337dcb
-
-if __name__ == '__main__':
-    main()
-```
-
-Bob has a decision to make.
-
----
-
-# Merge conflicts
-
-Bob decides that since variety is the spice of life, the program
-should print *both* messages. He modifies the program to look like:
-
-```python
-def main():
-    print('Hello Boston!')
-    print('This is a very contrived example.')
-
-if __name__ == '__main__':
-    main()
-```
-
-And then commits the result:
-
-```sh
-$ git add example.py
-$ git commit
-```
-
-This will bring up an editor allowing him to edit the commit message,
-and will then commit the changes.
-
----
-
-# Merge conflicts
-
-Bob can now push the changes back to the remote repository.
-
-```sh
-$ git push
-Counting objects: 6, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (4/4), done.
-Writing objects: 100% (6/6), 665 bytes | 665.00 KiB/s, done.
-Total 6 (delta 1), reused 0 (delta 0)
-To upstream
-   ca2ea18..84adb2c  master -> master
-```
-
----
-
-# Merge conflicts
-
-The history of the project now looks like this:
+Now you can push your changes:
 
 ```
-commit 84adb2ce8698166855ecd69b24b2716353f0ffa7 (HEAD -> master, origin/master)
-Merge: 7ce8691 ca2ea18
-Author: Bob <bob@example.com>
-Date:   Tue Apr 3 23:06:34 2018 -0400
-
-    Merge branch 'master' of .../upstream
-
-commit 7ce8691d997b2bb0b0d2a96e9093f5d7a952a99b
-Author: Bob <bob@example.com>
-Date:   Tue Apr 3 23:05:15 2018 -0400
-
-    Boston is pretty awesome.
-
-commit ca2ea182084c582d4c870f31b4e894e894337dcb
-Author: Alice <alice@example.com>
-Date:   Tue Apr 3 23:04:40 2018 -0400
-
-    This is an awful commit message
-
-commit 14b2c5ec20dae1e22efbf48d9854f861211bf628
-Author: Alice <alice@example.com>
-Date:   Tue Apr 3 23:04:14 2018 -0400
-
-    initial commit
+git push
 ```
-
----
-
-# Merge conflicts
-
-The state of the repository for people who like pictures:
-
-![Graph of git history for this example](images/merge-conflict-final.svg)
-
----
-
-# Managing credentials
-
-```sh
-git config credential.https://github.com.username yourusername
-git config credential.helper 'cache'
-```
-
 
 ---
 
